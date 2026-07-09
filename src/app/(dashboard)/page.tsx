@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { ArrowUpRight, MoreHorizontal, FileText, CheckCircle2, Clock } from 'lucide-react';
 import Link from 'next/link';
 import { useInvoiceStore } from '@/store/invoice-store';
-import { useClientStore } from '@/store/client-store';
 import { useSettingsStore } from '@/store/settings-store';
 
 const getStatusBadge = (status: string) => {
@@ -26,7 +25,6 @@ const getStatusBadge = (status: string) => {
 
 export default function DashboardPage() {
   const { invoices } = useInvoiceStore();
-  const { clients } = useClientStore();
   const { company } = useSettingsStore();
   const [timeframe, setTimeframe] = useState('mois');
 
@@ -50,7 +48,7 @@ export default function DashboardPage() {
   
   // Fake dynamic chart data based on timeframe
   const chartDataLength = timeframe === 'jour' ? 24 : timeframe === 'semaine' ? 7 : 12;
-  const chartData = Array.from({ length: chartDataLength }, (_, i) => {
+  const chartData = Array.from({ length: chartDataLength }, () => {
     // Generate pseudo-random data based on invoices length to make it look active
     return Math.max(10, Math.floor(Math.random() * 80) + (invoices.length * 2));
   });
@@ -135,7 +133,7 @@ export default function DashboardPage() {
         <div className="rounded-xl border border-border bg-background p-6 shadow-sm flex flex-col">
           <h2 className="text-base font-semibold text-foreground mb-4">Activité Récente</h2>
           <div className="flex-1 space-y-6 overflow-y-auto">
-             {recentInvoices.slice(0, 4).map((invoice, i) => (
+             {recentInvoices.slice(0, 4).map((invoice) => (
                 <div key={invoice.id} className="relative pl-6 before:absolute before:left-2 before:top-2 before:h-full before:-translate-x-1/2 before:w-px before:bg-border last:before:hidden">
                   <div className={`absolute left-0 top-1 h-4 w-4 rounded-full border-2 ${
                     invoice.status.toLowerCase().includes('pay') ? 'bg-emerald-100 border-emerald-500' :

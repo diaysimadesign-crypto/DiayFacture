@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -132,7 +133,7 @@ export default function SettingsPage() {
                   </div>
                   <div>
                     <p className="text-sm font-medium text-foreground">Avatar de profil</p>
-                    <p className="text-xs text-muted-foreground mt-2">Cliquez sur l'image pour changer.<br/>JPG, GIF ou PNG. 1MB max.</p>
+                    <p className="text-xs text-muted-foreground mt-2">Cliquez sur l&apos;image pour changer.<br/>JPG, GIF ou PNG. 1MB max.</p>
                   </div>
                 </div>
               </div>
