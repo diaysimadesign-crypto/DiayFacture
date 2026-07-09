@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
@@ -80,7 +81,7 @@ export default function Header() {
                 
                 <div className="space-y-4 max-h-[300px] overflow-y-auto">
                   {recentInvoices.length > 0 ? (
-                    recentInvoices.map((invoice, i) => (
+                    recentInvoices.map((invoice) => (
                       <div key={invoice.id} className="flex gap-3 text-sm">
                         <div className={`mt-0.5 h-2 w-2 shrink-0 rounded-full ${
                           invoice.status.toLowerCase().includes('pay') ? 'bg-emerald-500' :

@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useSettingsStore } from '@/store/settings-store';
@@ -11,7 +12,7 @@ export default function SupportPage() {
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-foreground">Support</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Vous avez une question ou besoin d'aide ? Contactez l'administrateur de l'application.
+          Vous avez une question ou besoin d&apos;aide ? Contactez l&apos;administrateur de l&apos;application.
         </p>
       </div>
 
