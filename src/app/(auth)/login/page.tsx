@@ -27,8 +27,8 @@ export default function LoginPage() {
       toast.success('Connexion réussie !');
       router.push('/');
       router.refresh();
-    } catch (error: any) {
-      toast.error(error.message || 'Erreur lors de la connexion');
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : 'Erreur lors de la connexion');
     } finally {
       setIsLoading(false);
     }
