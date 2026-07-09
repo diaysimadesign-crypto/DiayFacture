@@ -10,14 +10,17 @@ export type InvoiceLine = {
   invoice_id?: string;
 };
 
+export type InvoiceStatus = 'brouillon' | 'envoyee' | 'payee' | 'en retard';
+
 export type Invoice = {
   id: string;
   client: string;
+  clientPhone?: string;
   date: string;
   dueDate: string;
   rawAmount: number;
   amount: string;
-  status: 'brouillon' | 'envoyee' | 'payee' | 'en retard';
+  status: InvoiceStatus;
   lines: InvoiceLine[];
 };
 
@@ -48,19 +51,19 @@ export const useInvoiceStore = create<InvoiceStore>((set) => ({
       console.error('Error fetching invoices:', error);
       toast.error('Erreur lors du chargement des factures');
     } else if (data) {
-      const formattedInvoices: Invoice[] = data.map((inv: any) => ({
-        id: inv.id,
-        client: inv.client_name,
-        date: inv.date,
-        dueDate: inv.due_date,
-        rawAmount: inv.raw_amount,
-        amount: inv.amount,
-        status: inv.status,
-        lines: inv.lines.map((l: any) => ({
-          id: l.id,
-          description: l.description,
-          quantity: l.quantity,
-          unitPrice: l.unit_price,
+      const formattedInvoices: Invoice[] = data.map((inv: Record<string, unknown>) => ({
+        id: inv.id as string,
+        client: inv.client_name as string,
+        date: inv.date as string,
+        dueDate: inv.due_date as string,
+        rawAmount: inv.raw_amount as number,
+        amount: inv.amount as string,
+        status: inv.status as 'brouillon' | 'envoyee' | 'payee' | 'en retard',
+        lines: (inv.lines as Record<string, unknown>[]).map((l: Record<string, unknown>) => ({
+          id: l.id as string,
+          description: l.description as string,
+          quantity: l.quantity as number,
+          unitPrice: l.unit_price as number,
         }))
       }));
       set({ invoices: formattedInvoices });
@@ -108,7 +111,7 @@ export const useInvoiceStore = create<InvoiceStore>((set) => ({
   },
   updateInvoice: async (id, updatedFields) => {
     // We only update status in this app for now via actions
-    const dbUpdate: any = {};
+    const dbUpdate: Record<string, unknown> = {};
     if (updatedFields.status) dbUpdate.status = updatedFields.status;
     
     if (Object.keys(dbUpdate).length > 0) {
