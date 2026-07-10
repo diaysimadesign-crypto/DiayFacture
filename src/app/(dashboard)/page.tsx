@@ -32,10 +32,29 @@ export default function DashboardPage() {
     return amount.toLocaleString('fr-FR') + ' ' + (company?.currency || 'FCFA');
   };
 
-  const totalInvoices = invoices.length;
-  const totalBilled = invoices.reduce((acc, inv) => acc + (inv.rawAmount || 0), 0);
-  const totalPaid = invoices.filter(inv => inv.status.toLowerCase() === 'payée' || inv.status.toLowerCase() === 'payee').reduce((acc, inv) => acc + (inv.rawAmount || 0), 0);
-  const totalPending = invoices.filter(inv => inv.status.toLowerCase() !== 'payée' && inv.status.toLowerCase() !== 'payee' && inv.status.toLowerCase() !== 'brouillon').reduce((acc, inv) => acc + (inv.rawAmount || 0), 0);
+  const filterInvoicesByTimeframe = () => {
+    const now = new Date();
+    return invoices.filter(inv => {
+      const invDate = new Date(inv.date);
+      if (timeframe === 'jour') {
+        return invDate.toDateString() === now.toDateString();
+      } else if (timeframe === 'semaine') {
+        const diffTime = Math.abs(now.getTime() - invDate.getTime());
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        return diffDays <= 7;
+      } else if (timeframe === 'mois') {
+        return invDate.getMonth() === now.getMonth() && invDate.getFullYear() === now.getFullYear();
+      }
+      return true;
+    });
+  };
+
+  const filteredInvoices = filterInvoicesByTimeframe();
+
+  const totalInvoices = filteredInvoices.length;
+  const totalBilled = filteredInvoices.reduce((acc, inv) => acc + (inv.rawAmount || 0), 0);
+  const totalPaid = filteredInvoices.filter(inv => inv.status.toLowerCase() === 'payée' || inv.status.toLowerCase() === 'payee').reduce((acc, inv) => acc + (inv.rawAmount || 0), 0);
+  const totalPending = filteredInvoices.filter(inv => inv.status.toLowerCase() !== 'payée' && inv.status.toLowerCase() !== 'payee' && inv.status.toLowerCase() !== 'brouillon').reduce((acc, inv) => acc + (inv.rawAmount || 0), 0);
 
   const stats = [
     { name: 'Total factures', value: totalInvoices.toString(), change: '', changeType: 'neutral', icon: FileText },
