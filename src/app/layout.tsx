@@ -6,8 +6,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  title: "DiayFacture - SaaS de Facturation",
-  description: "Facturation Professionnelle Ultra Rapide pour les Entrepreneurs Africains",
+  title: "PAYIFY - SaaS de Facturation",
+  description: "Gérez vos factures et clients en toute simplicité.",
 };
 
 export default function RootLayout({

@@ -34,7 +34,7 @@ export default function Sidebar({ onLinkClick }: { onLinkClick?: () => void } = 
     <div className="flex h-full w-64 flex-col bg-sidebar text-white">
       {/* Logo */}
       <div className="flex h-16 shrink-0 items-center px-6 border-b border-white/10">
-        <span className="text-xl font-bold tracking-wider text-white">DiayFacture</span>
+        <span className="text-xl font-bold tracking-wider text-white">PAYIFY</span>
       </div>
 
       {/* Navigation */}

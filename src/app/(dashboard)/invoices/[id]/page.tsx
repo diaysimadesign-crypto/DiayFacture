@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { ArrowLeft, Trash2, Edit, Send, CheckCircle2, Download } from 'lucide-react';
 import { useInvoiceStore, InvoiceStatus } from '@/store/invoice-store';
 import { useClientStore } from '@/store/client-store';
+import { useSettingsStore } from '@/store/settings-store';
 
 export default function InvoiceDetailPage() {
   const params = useParams();
@@ -15,6 +16,7 @@ export default function InvoiceDetailPage() {
   const { invoices, deleteInvoice, updateInvoice } = useInvoiceStore();
   const invoice = invoices.find(inv => inv.id === id);
   
+  const { company, profile } = useSettingsStore();
   const { clients } = useClientStore();
   const matchedClient = clients.find(c => c.name === invoice?.client);
   const displayPhone = invoice?.clientPhone || matchedClient?.phone || '';
@@ -135,8 +137,8 @@ export default function InvoiceDetailPage() {
                  {displayPhone && <p className="text-sm text-muted-foreground mt-1">{displayPhone}</p>}
                </div>
                <div className="text-right">
-                 <h3 className="text-lg font-bold text-foreground">DIAYSIMA DESIGN</h3>
-                 <p className="text-sm text-muted-foreground">contact@diaysima.com</p>
+                 <h3 className="text-lg font-bold text-foreground">{company.name || 'Mon Entreprise'}</h3>
+                 <p className="text-sm text-muted-foreground">{profile.email}</p>
                </div>
             </div>
             
