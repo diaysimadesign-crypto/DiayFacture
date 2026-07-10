@@ -26,7 +26,7 @@ export default function ProductsPage() {
 
   const openEditModal = (product: Product) => {
     setEditingProduct(product);
-    setFormData({ name: product.name, description: product.description, price: product.price, sku: product.sku });
+    setFormData({ name: product.name, description: product.description || '', price: product.price, sku: product.sku || '' });
     setIsModalOpen(true);
   };
 
