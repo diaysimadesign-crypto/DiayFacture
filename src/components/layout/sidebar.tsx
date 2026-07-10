@@ -15,7 +15,7 @@ import {
 import { useSettingsStore } from '@/store/settings-store';
 
 const mainNavigation = [
-  { name: "Vue d'ensemble", href: '/', icon: LayoutDashboard, current: true },
+  { name: "Tableau de bord", href: '/', icon: LayoutDashboard, current: true },
   { name: 'Factures', href: '/invoices', icon: FileText, current: false },
   { name: 'Clients', href: '/clients', icon: Users, current: false },
   { name: 'Produits', href: '/products', icon: Package, current: false },
