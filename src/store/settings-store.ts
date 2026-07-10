@@ -69,11 +69,16 @@ export const useSettingsStore = create<SettingsStore>((set) => ({
       });
     } else {
       // New user: Create default settings
+      const { data: authData } = await supabase.auth.getUser();
+      const userEmail = authData.user?.email || '';
+      // Capitalize first letter of email prefix for a nicer default name
+      const defaultName = userEmail ? userEmail.split('@')[0].charAt(0).toUpperCase() + userEmail.split('@')[0].slice(1) : 'Profil Utilisateur';
+
       const defaultSettingsForDb = {
-        profile_name: 'Nouveau Profil',
-        profile_email: '',
+        profile_name: defaultName,
+        profile_email: userEmail,
         profile_phone: '',
-        profile_role: 'Utilisateur',
+        profile_role: 'Administrateur',
         company_name: 'Mon Entreprise',
         company_address: '',
         company_currency: 'XOF'
