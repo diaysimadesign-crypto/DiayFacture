@@ -38,7 +38,7 @@ export default function InvoiceDetailPage() {
     router.push('/invoices');
   };
 
-  const handleStatusChange = async (newStatus: any) => {
+  const handleStatusChange = async (newStatus: InvoiceStatus) => {
     await updateInvoice(invoice.id, { status: newStatus });
   };
 

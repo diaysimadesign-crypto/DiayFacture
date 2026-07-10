@@ -24,17 +24,18 @@ export default function RegisterPage() {
     setIsLoading(true);
 
     try {
-      const { data, error } = await supabase.auth.signUp({
+      // Create user using Supabase Auth
+      const { error } = await supabase.auth.signUp({
         email,
         password,
       });
 
       if (error) throw error;
 
-      toast.success('Inscription réussie ! Vous pouvez maintenant vous connecter.');
+      toast.success('Compte créé avec succès !');
       router.push('/login');
-    } catch (error: any) {
-      toast.error(error.message || 'Erreur lors de l\'inscription');
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : 'Erreur lors de la création du compte');
     } finally {
       setIsLoading(false);
     }
