@@ -15,7 +15,7 @@ export default function ProductsPage() {
 
   const filteredProducts = products.filter(p => 
     p.name.toLowerCase().includes(search.toLowerCase()) || 
-    p.sku.toLowerCase().includes(search.toLowerCase())
+    (p.sku && p.sku.toLowerCase().includes(search.toLowerCase()))
   );
 
   const openAddModal = () => {
