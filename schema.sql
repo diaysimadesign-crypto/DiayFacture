@@ -3,6 +3,7 @@
 -- 1. Clients Table
 CREATE TABLE public.clients (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    user_id UUID DEFAULT auth.uid() NOT NULL,
     name TEXT NOT NULL,
     email TEXT,
     phone TEXT,
@@ -13,6 +14,7 @@ CREATE TABLE public.clients (
 -- 2. Products Table
 CREATE TABLE public.products (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    user_id UUID DEFAULT auth.uid() NOT NULL,
     name TEXT NOT NULL,
     description TEXT,
     price NUMERIC NOT NULL,
@@ -23,6 +25,7 @@ CREATE TABLE public.products (
 -- 3. Invoices Table
 CREATE TABLE public.invoices (
     id TEXT PRIMARY KEY, -- e.g., 'DF/2026/042'
+    user_id UUID DEFAULT auth.uid() NOT NULL,
     client_name TEXT NOT NULL,
     client_phone TEXT,
     date DATE NOT NULL,
@@ -36,6 +39,7 @@ CREATE TABLE public.invoices (
 -- 4. Invoice Lines Table
 CREATE TABLE public.invoice_lines (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    user_id UUID DEFAULT auth.uid() NOT NULL,
     invoice_id TEXT NOT NULL REFERENCES public.invoices(id) ON DELETE CASCADE,
     description TEXT NOT NULL,
     quantity INTEGER NOT NULL,
@@ -45,6 +49,7 @@ CREATE TABLE public.invoice_lines (
 -- 5. Settings Table
 CREATE TABLE public.settings (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    user_id UUID DEFAULT auth.uid() NOT NULL,
     profile_name TEXT NOT NULL,
     profile_email TEXT NOT NULL,
     profile_phone TEXT NOT NULL,
@@ -55,45 +60,38 @@ CREATE TABLE public.settings (
     company_currency TEXT NOT NULL DEFAULT 'XOF'
 );
 
--- Insert default settings
-INSERT INTO public.settings (profile_name, profile_email, profile_phone, profile_role, company_name, company_address, company_ninea, company_currency)
-VALUES (
-    'DIAYSIMA DESIGN', 'contact@diaysima.com', '+221 77 000 00 00', 'Fondateur & CEO',
-    'DIAYSIMA DESIGN', 'Dakar, Sénégal', '', 'XOF'
-);
+-- Insert default settings (Handled by frontend dynamically now per user)
 
 -- Row Level Security (RLS) setup
--- For simplicity in this initial migration, we allow anon access.
--- In production, you should enable RLS and require authentication.
-
 ALTER TABLE public.clients ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.products ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.invoices ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.invoice_lines ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.settings ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Allow public read access to clients" ON public.clients FOR SELECT USING (true);
-CREATE POLICY "Allow public insert to clients" ON public.clients FOR INSERT WITH CHECK (true);
-CREATE POLICY "Allow public update to clients" ON public.clients FOR UPDATE USING (true);
-CREATE POLICY "Allow public delete to clients" ON public.clients FOR DELETE USING (true);
+CREATE POLICY "Users can read own clients" ON public.clients FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "Users can insert own clients" ON public.clients FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Users can update own clients" ON public.clients FOR UPDATE USING (auth.uid() = user_id);
+CREATE POLICY "Users can delete own clients" ON public.clients FOR DELETE USING (auth.uid() = user_id);
 
-CREATE POLICY "Allow public read access to products" ON public.products FOR SELECT USING (true);
-CREATE POLICY "Allow public insert to products" ON public.products FOR INSERT WITH CHECK (true);
-CREATE POLICY "Allow public update to products" ON public.products FOR UPDATE USING (true);
-CREATE POLICY "Allow public delete to products" ON public.products FOR DELETE USING (true);
+CREATE POLICY "Users can read own products" ON public.products FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "Users can insert own products" ON public.products FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Users can update own products" ON public.products FOR UPDATE USING (auth.uid() = user_id);
+CREATE POLICY "Users can delete own products" ON public.products FOR DELETE USING (auth.uid() = user_id);
 
-CREATE POLICY "Allow public read access to invoices" ON public.invoices FOR SELECT USING (true);
-CREATE POLICY "Allow public insert to invoices" ON public.invoices FOR INSERT WITH CHECK (true);
-CREATE POLICY "Allow public update to invoices" ON public.invoices FOR UPDATE USING (true);
-CREATE POLICY "Allow public delete to invoices" ON public.invoices FOR DELETE USING (true);
+CREATE POLICY "Users can read own invoices" ON public.invoices FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "Users can insert own invoices" ON public.invoices FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Users can update own invoices" ON public.invoices FOR UPDATE USING (auth.uid() = user_id);
+CREATE POLICY "Users can delete own invoices" ON public.invoices FOR DELETE USING (auth.uid() = user_id);
 
-CREATE POLICY "Allow public read access to invoice_lines" ON public.invoice_lines FOR SELECT USING (true);
-CREATE POLICY "Allow public insert to invoice_lines" ON public.invoice_lines FOR INSERT WITH CHECK (true);
-CREATE POLICY "Allow public update to invoice_lines" ON public.invoice_lines FOR UPDATE USING (true);
-CREATE POLICY "Allow public delete to invoice_lines" ON public.invoice_lines FOR DELETE USING (true);
+CREATE POLICY "Users can read own invoice_lines" ON public.invoice_lines FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "Users can insert own invoice_lines" ON public.invoice_lines FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Users can update own invoice_lines" ON public.invoice_lines FOR UPDATE USING (auth.uid() = user_id);
+CREATE POLICY "Users can delete own invoice_lines" ON public.invoice_lines FOR DELETE USING (auth.uid() = user_id);
 
-CREATE POLICY "Allow public read access to settings" ON public.settings FOR SELECT USING (true);
-CREATE POLICY "Allow public update to settings" ON public.settings FOR UPDATE USING (true);
+CREATE POLICY "Users can read own settings" ON public.settings FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "Users can insert own settings" ON public.settings FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Users can update own settings" ON public.settings FOR UPDATE USING (auth.uid() = user_id);
 
 -- Realtime configuration
 alter publication supabase_realtime add table public.clients;
