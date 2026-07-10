@@ -26,6 +26,7 @@ export default function NewInvoicePage() {
     { id: '1', description: '', quantity: 1, unitPrice: 0 }
   ]);
   const [createdInvoiceId, setCreatedInvoiceId] = useState<string | null>(null);
+  const [hasTva, setHasTva] = useState(true);
 
   const addLine = () => {
     setLines([...lines, { id: Date.now().toString(), description: '', quantity: 1, unitPrice: 0 }]);
@@ -48,7 +49,7 @@ export default function NewInvoicePage() {
   };
 
   const subtotal = lines.reduce((acc, line) => acc + (line.quantity * line.unitPrice), 0);
-  const tax = subtotal * 0.18;
+  const tax = hasTva ? subtotal * 0.18 : 0;
   const total = subtotal + tax;
 
   const handleSave = async (status: 'brouillon' | 'envoyee') => {
@@ -92,7 +93,7 @@ export default function NewInvoicePage() {
                 href={`/invoices/${encodeURIComponent(createdInvoiceId)}`}
                 className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-primary rounded-lg hover:opacity-90 transition-opacity"
               >
-                <Download className="h-4 w-4" /> Télécharger / Aperçu
+                <Download className="h-4 w-4" /> Aperçu
               </Link>
               <Link 
                 href="/invoices"
@@ -273,8 +274,16 @@ export default function NewInvoicePage() {
                 <span>Sous-total</span>
                 <span className="font-medium text-foreground">{formatFCFA(subtotal)}</span>
               </div>
-              <div className="flex justify-between text-muted-foreground">
-                <span>TVA (18%)</span>
+              <div className="flex justify-between items-center text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <span>TVA (18%)</span>
+                  <input 
+                    type="checkbox" 
+                    checked={hasTva} 
+                    onChange={(e) => setHasTva(e.target.checked)}
+                    className="rounded border-border text-primary focus:ring-primary h-4 w-4 cursor-pointer"
+                  />
+                </div>
                 <span className="font-medium text-foreground">{formatFCFA(tax)}</span>
               </div>
               

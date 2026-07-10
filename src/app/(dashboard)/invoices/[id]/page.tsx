@@ -47,7 +47,8 @@ export default function InvoiceDetailPage() {
   };
 
   const subtotal = invoice.lines.reduce((acc, line) => acc + (line.quantity * line.unitPrice), 0);
-  const tax = subtotal * 0.18;
+  const hasTva = invoice.rawAmount > subtotal;
+  const tax = hasTva ? subtotal * 0.18 : 0;
   const total = subtotal + tax;
 
   return (
@@ -192,10 +193,12 @@ export default function InvoiceDetailPage() {
                 <span>Sous-total</span>
                 <span className="font-medium text-foreground">{formatFCFA(subtotal)}</span>
               </div>
-              <div className="flex justify-between text-muted-foreground">
-                <span>TVA (18%)</span>
-                <span className="font-medium text-foreground">{formatFCFA(tax)}</span>
-              </div>
+              {hasTva && (
+                <div className="flex justify-between text-muted-foreground">
+                  <span>TVA (18%)</span>
+                  <span className="font-medium text-foreground">{formatFCFA(tax)}</span>
+                </div>
+              )}
               
               <div className="pt-4 mt-4 border-t border-border flex justify-between items-center">
                 <span className="text-base font-semibold text-foreground">Total TTC</span>
