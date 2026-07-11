@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { toast } from 'sonner';
@@ -25,7 +24,7 @@ export default function LoginPage() {
       if (error) throw error;
 
       toast.success('Connexion réussie !');
-      router.push('/');
+      router.push('/dashboard');
       router.refresh();
     } catch (error: unknown) {
       toast.error(error instanceof Error ? error.message : 'Erreur lors de la connexion');
@@ -83,23 +82,6 @@ export default function LoginPage() {
           </button>
         </div>
       </form>
-
-      <div className="mt-6">
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-border" />
-          </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-background text-muted-foreground">Pas encore de compte ?</span>
-          </div>
-        </div>
-
-        <div className="mt-6 text-center">
-          <Link href="/register" className="text-primary hover:text-primary/90 font-medium">
-            Créer un compte
-          </Link>
-        </div>
-      </div>
     </div>
   );
 }

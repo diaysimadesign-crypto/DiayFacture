@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { toast } from 'sonner';
@@ -108,23 +107,6 @@ export default function RegisterPage() {
           </button>
         </div>
       </form>
-
-      <div className="mt-6">
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-border" />
-          </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-background text-muted-foreground">Vous avez déjà un compte ?</span>
-          </div>
-        </div>
-
-        <div className="mt-6 text-center">
-          <Link href="/login" className="text-primary hover:text-primary/90 font-medium">
-            Se connecter
-          </Link>
-        </div>
-      </div>
     </div>
   );
 }
